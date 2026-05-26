@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCC Division – Laporan Presentasi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #dde3ed;
+      --border-strong: #c4cdd9;
+      --accent: #2563eb;
+      --accent2: #0891b2;
+      --accent3: #7c3aed;
+      --gold: #d97706;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #475569;
+      --success: #059669;
+      --error: #dc2626;
+      --card-bg: #ffffff;
+      --rdc-color: #1d4ed8;
+      --rdc-light: #eff6ff;
+      --pers-color: #047857;
+      --pers-light: #ecfdf5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* BG — subtle dot grid on light */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: radial-gradient(circle, #c8d6e8 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none; opacity: 0.55;
+    }
+    .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+    .orb1 { width: 500px; height: 500px; background: rgba(37,99,235,0.07); top: -150px; right: -150px; }
+    .orb2 { width: 400px; height: 400px; background: rgba(5,150,105,0.06); bottom: -100px; left: -100px; }
+
+    /* HEADER */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 48px; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent3)); border-radius: 10px; display: grid; place-items: center; font-size: 16px; font-weight: 800; color: white; }
+    .logo-text { font-size: 15px; font-weight: 700; letter-spacing: 0.03em; color: var(--text); }
+    .logo-text span { color: var(--accent); }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .nav-btn { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.2s; text-decoration: none; display: inline-block; }
+    .nav-btn.ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border-strong); }
+    .nav-btn.ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+    .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent3)); color: white; }
+    .nav-btn.primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .print-btn { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #fbbf24; background: #fffbeb; color: var(--gold); font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .print-btn:hover { background: #fef3c7; }
+    .present-btn { padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: linear-gradient(135deg, #059669, #047857); color: white; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; box-shadow: 0 2px 10px rgba(5,150,105,0.3); }
+    .present-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(5,150,105,0.45); opacity: 0.92; }
+    .present-btn:active { transform: translateY(0); }
+
+    /* MAIN */
+    main { position: relative; z-index: 5; max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* DATE SELECTOR BAR */
+    .date-bar {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 36px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .date-bar label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+    .date-bar select { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; padding: 8px 12px; outline: none; cursor: pointer; transition: border-color 0.2s; }
+    .date-bar select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .date-bar select option { background: white; color: #0f172a; }
+    .date-bar .or { color: var(--text-muted); font-size: 12px; font-weight: 500; }
+    .date-bar input[type="date"] { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Sora', sans-serif; font-size: 14px; padding: 8px 12px; outline: none; transition: border-color 0.2s; }
+    .date-bar input[type="date"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .date-bar input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+    .load-btn { padding: 9px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: linear-gradient(135deg, var(--accent), var(--accent3)); color: white; font-family: inherit; transition: all 0.2s; white-space: nowrap; box-shadow: 0 2px 8px rgba(37,99,235,0.25); }
+    .load-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,0.35); }
+
+    /* REPORT HEADER */
+    .report-header { text-align: center; margin-bottom: 36px; }
+    .report-date-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 20px; border-radius: 24px;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      font-size: 12px; font-weight: 700; color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.04em; margin-bottom: 14px;
+    }
+    .report-header h1 { font-size: clamp(22px, 4vw, 34px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; color: var(--text); }
+    .report-header p { color: var(--text-muted); font-size: 14px; margin-top: 8px; }
+
+    /* STATS ROW */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+    .stat-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .stat-card .label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+    .stat-card .value { font-size: 28px; font-weight: 800; }
+    .stat-card.blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-color: #bfdbfe; }
+    .stat-card.blue .value { color: var(--accent); }
+    .stat-card.green { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-color: #a7f3d0; }
+    .stat-card.green .value { color: var(--success); }
+    .stat-card.purple { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-color: #c4b5fd; }
+    .stat-card.purple .value { color: var(--accent3); }
+    .stat-card.gold { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #fde68a; }
+    .stat-card.gold .value { color: var(--gold); }
+
+    /* REPORT GRID */
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* SECTION CARD */
+    .section-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .section-card.full { grid-column: span 2; }
+
+    .section-head {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .rdc .section-head { background: linear-gradient(135deg, #eff6ff, #f0f9ff); }
+    .pers .section-head { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); }
+
+    .section-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
+    .rdc .section-icon { background: #dbeafe; }
+    .pers .section-icon { background: #d1fae5; }
+
+    .section-head-text h2 { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+    .rdc .section-head-text h2 { color: var(--rdc-color); }
+    .pers .section-head-text h2 { color: var(--pers-color); }
+    .section-head-text p { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+
+    .section-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; background: #f8fafc; }
+
+    /* PERSON BLOCK */
+    .person-block {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .person-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface2);
+    }
+    .person-avatar {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: grid; place-items: center; font-size: 13px; font-weight: 800;
+      flex-shrink: 0; color: white;
+    }
+    .rdc .person-avatar { background: linear-gradient(135deg, #2563eb, #0891b2); }
+    .pers .person-avatar { background: linear-gradient(135deg, #059669, #047857); }
+
+    .person-info { flex: 1; }
+    .person-info .name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .person-info .role { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+
+    .person-points { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+    .point-entry {
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 11px 13px;
+      background: var(--surface2); border-radius: 9px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .point-entry:hover { border-color: var(--border-strong); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+    .point-text-wrap { display: flex; align-items: flex-start; gap: 9px; }
+    .point-bullet { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .rdc .point-bullet { background: var(--rdc-color); }
+    .pers .point-bullet { background: var(--pers-color); }
+
+    .point-content { flex: 1; }
+    .point-text { font-size: 13px; line-height: 1.7; color: var(--text); }
+    .point-text.editing { display: none; }
+
+    .point-edit-area {
+      display: none; width: 100%;
+      background: white; border: 1.5px solid var(--accent);
+      border-radius: 8px; color: var(--text); font-family: 'Sora', sans-serif;
+      font-size: 13px; line-height: 1.7; padding: 8px 10px; resize: vertical;
+      min-height: 60px; outline: none;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+    .point-edit-area.active { display: block; }
+
+    .point-actions { display: flex; align-items: center; gap: 6px; }
+    .action-btn {
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 600; cursor: pointer;
+      border: 1px solid; font-family: inherit; transition: all 0.2s;
+    }
+    .edit-btn { border-color: #bfdbfe; background: #eff6ff; color: var(--accent); }
+    .edit-btn:hover { background: #dbeafe; }
+    .save-edit-btn { border-color: #a7f3d0; background: #ecfdf5; color: var(--success); display: none; }
+    .save-edit-btn:hover { background: #d1fae5; }
+    .cancel-edit-btn { border-color: #fecaca; background: #fef2f2; color: var(--error); display: none; }
+    .cancel-edit-btn:hover { background: #fee2e2; }
+
+    .point-extras { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+    .point-link-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      color: var(--accent2); text-decoration: none; transition: background 0.2s;
+    }
+    .point-link-badge:hover { background: #e0f2fe; }
+    .point-img-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      background: #fffbeb; border: 1px solid #fde68a;
+      color: var(--gold); cursor: pointer; transition: background 0.2s;
+    }
+    .point-img-badge:hover { background: #fef3c7; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+
+    /* LOADING */
+    .loading-state { text-align: center; padding: 80px 20px; }
+    .spinner {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 3px solid #dbeafe;
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* IMAGE MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(15,23,42,0.7); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-overlay img { max-width: 100%; max-height: 80vh; border-radius: 12px; object-fit: contain; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+    .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: white; font-size: 20px; cursor: pointer; display: grid; place-items: center; }
+    .modal-close:hover { background: rgba(255,255,255,0.25); }
+
+    /* TOAST */
+    .toast-container { position: fixed; bottom: 32px; right: 32px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { padding: 13px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: toastIn 0.3s ease; max-width: 320px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    .toast.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .toast.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .toast.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+    /* PRINT */
+    @media print {
+      body { background: white; color: #111; }
+      .bg-grid, .bg-orb, header, .date-bar, .print-btn, .modal-overlay, .toast-container, .action-btn { display: none !important; }
+      .report-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .section-card { break-inside: avoid; border: 1px solid #e2e8f0; box-shadow: none; }
+      .rdc .section-head { background: #eff6ff; }
+      .pers .section-head { background: #ecfdf5; }
+      .section-body { background: white; }
+      .point-entry { background: #f8fafc; box-shadow: none; }
+      .stats-row { display: none; }
+      .report-date-badge { background: #eff6ff; }
+      main { padding: 20px; }
+      @page { size: A4; margin: 15mm; }
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0 16px; }
+      .header-right { gap: 6px; }
+      .report-grid { grid-template-columns: 1fr; }
+      .section-card.full { grid-column: span 1; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .date-bar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">H</div>
+      <div class="logo-text"><span>HCC</span> Division</div>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="nav-btn ghost">✏️ Input Data</a>
+      <button class="print-btn" onclick="printReport()">🖨 Print PDF</button>
+      <button class="present-btn" onclick="presentasikan()">🖥 Presentasikan</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- DATE SELECTOR -->
+    <div class="date-bar">
+      <label>Pilih Tanggal</label>
+      <select id="dateSelect" onchange="onDateSelect()">
+        <option value="">— Memuat daftar tanggal… —</option>
+      </select>
+      <span class="or">atau</span>
+      <input type="date" id="dateInput" onchange="onDateInput()" />
+      <button class="load-btn" onclick="loadReport()">📊 Tampilkan</button>
+    </div>
+
+    <!-- REPORT CONTENT -->
+    <div id="reportContent">
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <h3>Pilih Tanggal Presentasi</h3>
+        <p>Pilih tanggal dari dropdown atau masukkan tanggal manual,<br>lalu klik "Tampilkan" untuk melihat laporan.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- IMAGE MODAL -->
+  <div class="modal-overlay" id="imgModal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modalImg" src="" alt="Lampiran" />
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ============================================================
+    // KONFIGURASI — ganti URL ini dengan URL Apps Script kamu
+    // ============================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+    // ============================================================
+    const jabatanMap = {
+      'Sony Arman':   'SM Recruitment and Development',
+      'Asep Tofandi': 'SM Personalia',
+      'Syahendri':    'Manager Recruitment',
+      'Joko Prabowo': 'Manager Development',
+      'Andreas':      'Manager Benefit',
+      'Bayu':         'Manager Personalia',
+      'Ridwan':       'Manager Compliance',
+    };
+
+    const rdcNames  = ['Sony Arman', 'Joko Prabowo', 'Syahendri', 'Ridwan'];
+    const persNames = ['Asep Tofandi', 'Andreas', 'Bayu'];
+
+    const avatarColors = {
+      'Sony Arman': '#2563eb', 'Joko Prabowo': '#7c3aed',
+      'Syahendri': '#0891b2', 'Ridwan': '#1d4ed8',
+      'Asep Tofandi': '#059669', 'Andreas': '#16a34a', 'Bayu': '#065f46',
+    };
+
+    let currentDate = '';
+    let allData = [];
+
+    // ── INIT: Load dates ──
+    async function loadDates() {
+      try {
+        const data = await callGet({ action: 'getAllDates' });
+        const sel = document.getElementById('dateSelect');
+        sel.innerHTML = '<option value="">— Pilih Tanggal —</option>';
+        if (data.dates && data.dates.length > 0) {
+          data.dates.forEach(rawDate => {
+            const opt = document.createElement('option');
+            opt.value = rawDate; // keep raw for API
+            const label = formatDisplayDate(rawDate);
+            // Guard: never show "undefined NaN undefined NaN"
+            opt.textContent = (label && !label.includes('NaN') && !label.includes('undefined'))
+              ? label : String(rawDate);
+            sel.appendChild(opt);
+          });
+        }
+      } catch (e) {
+        console.log('Could not load dates from script, using manual input.', e);
+      }
+    }
+
+    function onDateSelect() {
+      const val = document.getElementById('dateSelect').value;
+      if (val) {
+        const normed = normDate(val);
+        // sync the date-picker only if normDate produced a valid YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(normed)) {
+          document.getElementById('dateInput').value = normed;
+        }
+        currentDate = val;
+      }
+    }
+    function onDateInput() {
+      const val = document.getElementById('dateInput').value;
+      if (val) { currentDate = val; document.getElementById('dateSelect').value = ''; }
+    }
+
+    async function loadReport() {
+      const rawDate = currentDate
+        || document.getElementById('dateInput').value
+        || document.getElementById('dateSelect').value;
+      if (!rawDate) { showToast('Pilih tanggal terlebih dahulu!', 'error'); return; }
+
+      // Normalise to YYYY-MM-DD for consistent comparison
+      const queryDate = normDate(rawDate);
+      currentDate = rawDate;
+
+      document.getElementById('reportContent').innerHTML = `
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p style="color:var(--text-muted);font-size:14px;">Memuat data presentasi…</p>
+        </div>
+      `;
+
+      try {
+        // Fetch ALL rows then filter client-side — avoids date-format mismatch in Apps Script
+        const result = await callGet({ action: 'getData' });
+        const raw = result.data || [];
+
+        allData = raw.filter(row => normDate(row.tanggal) === queryDate);
+
+        // If we got nothing and the server returned nothing at all, also try server-side filter
+        if (allData.length === 0 && raw.length === 0) {
+          const result2 = await callGet({ action: 'getData', date: queryDate });
+          allData = (result2.data || []).filter(row => normDate(row.tanggal) === queryDate);
+        }
+
+        renderReport(rawDate, allData);
+      } catch (e) {
+        console.error('Script error:', e);
+        document.getElementById('reportContent').innerHTML = `
+          <div class="empty-state">
+            <div class="icon">⚠️</div>
+            <h3>Gagal Memuat Data</h3>
+            <p>Pastikan <code>SCRIPT_URL</code> sudah dikonfigurasi dengan benar dan Apps Script sudah di-deploy.<br><br>
+            <small style="font-family:monospace;color:var(--text-muted)">Error: ${e.message || e}</small></p>
+          </div>`;
+      }
+    }
+
+    function renderReport(date, data) {
+      const rc = document.getElementById('reportContent');
+
+      if (!data || data.length === 0) {
+        rc.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>Tidak Ada Data</h3><p>Belum ada data presentasi untuk tanggal ${formatDisplayDate(date)}.</p></div>`;
+        return;
+      }
+
+      // Group by name
+      const byName = {};
+      data.forEach(row => {
+        if (!byName[row.nama]) byName[row.nama] = [];
+        byName[row.nama].push(row);
+      });
+
+      const rdcData  = rdcNames.filter(n => byName[n]);
+      const persData = persNames.filter(n => byName[n]);
+      const totalPoints = data.length;
+      const totalPersons = Object.keys(byName).length;
+      const totalLinks  = data.filter(d => d.link).length;
+      const totalImgs   = data.filter(d => d.imageUrl).length;
+
+      rc.innerHTML = `
+        <div class="report-header">
+          <div class="report-date-badge">📅 ${formatDisplayDate(date)}</div>
+          <h1>Laporan Presentasi HCC Division</h1>
+          <p>Rekap seluruh poin presentasi divisi Human Capital &amp; Compliance</p>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card blue"><div class="label">Total Poin</div><div class="value">${totalPoints}</div></div>
+          <div class="stat-card green"><div class="label">Personil Hadir</div><div class="value">${totalPersons}</div></div>
+          <div class="stat-card purple"><div class="label">Link Referensi</div><div class="value">${totalLinks}</div></div>
+          <div class="stat-card gold"><div class="label">Lampiran Gambar</div><div class="value">${totalImgs}</div></div>
+        </div>
+
+        <div class="report-grid">
+          <!-- RDC SECTION -->
+          <div class="section-card rdc ${persData.length === 0 ? 'full' : ''}">
+            <div class="section-head">
+              <div class="section-icon">🏢</div>
+              <div class="section-head-text">
+                <h2>Recruitment, Development &amp; Compliance</h2>
+                <p>Sony Arman · Joko Prabowo · Syahendri · Ridwan</p>
+              </div>
+            </div>
+            <div class="section-body" id="rdcBody">
+              ${rdcData.length === 0
+                ? '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Tidak ada data untuk sesi ini</p>'
+                : rdcData.map(name => renderPersonBlock(name, byName[name], 'rdc')).join('')}
+            </div>
+          </div>
+
+          <!-- PERSONALIA SECTION -->
+          <div class="section-card pers ${rdcData.length === 0 ? 'full' : ''}">
+            <div class="section-head">
+              <div class="section-icon">👥</div>
+              <div class="section-head-text">
+                <h2>Personalia Department</h2>
+                <p>Asep Tofandi · Andreas · Bayu</p>
+              </div>
+            </div>
+            <div class="section-body" id="persBody">
+              ${persData.length === 0
+                ? '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px">Tidak ada data untuk sesi ini</p>'
+                : persData.map(name => renderPersonBlock(name, byName[name], 'pers')).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPersonBlock(name, points, group) {
+      const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      const jabatan  = jabatanMap[name] || '';
+      const pointsHtml = points.map((p, i) => `
+        <div class="point-entry" data-id="${p.id || ''}">
+          <div class="point-text-wrap">
+            <div class="point-bullet"></div>
+            <div class="point-content">
+              <p class="point-text" id="pt_${p.id || 'x' + i}">${escHtml(p.point || '')}</p>
+              <textarea class="point-edit-area" id="ptedit_${p.id || 'x' + i}">${escHtml(p.point || '')}</textarea>
+            </div>
+          </div>
+          <div class="point-actions">
+            <button class="action-btn edit-btn" onclick="startEdit('${p.id || ''}','${p.id || 'x' + i}')">✏️ Edit</button>
+            <button class="action-btn save-edit-btn" id="sbtn_${p.id || 'x' + i}" onclick="saveEdit('${p.id || ''}','${p.id || 'x' + i}')">✅ Simpan</button>
+            <button class="action-btn cancel-edit-btn" id="cbtn_${p.id || 'x' + i}" onclick="cancelEdit('${p.id || 'x' + i}','${escHtml(p.point || '')}')">✕</button>
+          </div>
+          ${p.link || p.imageUrl ? `<div class="point-extras">
+            ${p.link ? `<a class="point-link-badge" href="${p.link}" target="_blank">🔗 Lihat Link</a>` : ''}
+            ${p.imageUrl ? `<span class="point-img-badge" onclick="openModal('${p.imageUrl}')">🖼 Lihat Gambar</span>` : ''}
+          </div>` : ''}
+        </div>
+      `).join('');
+
+      return `
+        <div class="person-block">
+          <div class="person-header">
+            <div class="person-avatar" style="background:linear-gradient(135deg, ${avatarColors[name]||'#4f46e5'}, ${avatarColors[name]||'#4f46e5'}aa)">${initials}</div>
+            <div class="person-info">
+              <div class="name">${name}</div>
+              <div class="role">${jabatan}</div>
+            </div>
+          </div>
+          <div class="person-points">${pointsHtml}</div>
+        </div>
+      `;
+    }
+
+    // ── EDIT ──
+    function startEdit(id, key) {
+      document.getElementById('pt_' + key).classList.add('editing');
+      document.getElementById('ptedit_' + key).classList.add('active');
+      document.getElementById('sbtn_' + key).style.display = 'inline-flex';
+      document.getElementById('cbtn_' + key).style.display = 'inline-flex';
+    }
+    function cancelEdit(key, original) {
+      document.getElementById('pt_' + key).classList.remove('editing');
+      document.getElementById('ptedit_' + key).classList.remove('active');
+      document.getElementById('ptedit_' + key).value = original;
+      document.getElementById('sbtn_' + key).style.display = 'none';
+      document.getElementById('cbtn_' + key).style.display = 'none';
+    }
+    async function saveEdit(id, key) {
+      const newText = document.getElementById('ptedit_' + key).value.trim();
+      if (!newText) { showToast('Teks tidak boleh kosong!', 'error'); return; }
+
+      try {
+        if (id && !id.startsWith('x')) {
+          await callPost({ action: 'updatePoint', rowId: id, newText });
+        }
+        document.getElementById('pt_' + key).textContent = newText;
+        document.getElementById('pt_' + key).classList.remove('editing');
+        document.getElementById('ptedit_' + key).classList.remove('active');
+        document.getElementById('sbtn_' + key).style.display = 'none';
+        document.getElementById('cbtn_' + key).style.display = 'none';
+        showToast('Poin berhasil diupdate!', 'success');
+      } catch(e) {
+        showToast('Gagal menyimpan. Coba lagi.', 'error');
+      }
+    }
+
+    // ── MODAL ──
+    function openModal(url) {
+      document.getElementById('modalImg').src = url;
+      document.getElementById('imgModal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('imgModal').classList.remove('open'); }
+
+    // ── PRINT ──
+    function printReport() {
+      if (!currentDate) { showToast('Muat laporan terlebih dahulu!', 'error'); return; }
+      window.print();
+    }
+
+    // ── PRESENTASIKAN ──
+    function presentasikan() {
+      if (!currentDate || !allData || allData.length === 0) {
+        showToast('Pilih dan tampilkan tanggal terlebih dahulu!', 'error');
+        return;
+      }
+      try {
+        localStorage.setItem('hcc_presentation', JSON.stringify({
+          date: currentDate,
+          data: allData
+        }));
+        window.open('display.html', '_blank');
+      } catch(e) {
+        showToast('Gagal membuka presentasi. Coba lagi.', 'error');
+        console.error(e);
+      }
+    }
+
+    // ── HELPERS ──
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Normalise any date string → JS Date safely (handles YYYY-MM-DD, D/M/YYYY, M/D/YYYY, etc.)
+    function parseAnyDate(d) {
+      if (!d) return null;
+      d = String(d).trim();
+
+      // Already YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+        return new Date(d + 'T00:00:00');
+      }
+      // DD/MM/YYYY or D/M/YYYY (Indonesian style from Sheets)
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)) {
+        const [day, month, year] = d.split('/');
+        return new Date(`${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}T00:00:00`);
+      }
+      // MM/DD/YYYY (US locale from Sheets)
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)) {
+        return new Date(d);
+      }
+      // Fallback: try native parse
+      const dt = new Date(d);
+      return isNaN(dt.getTime()) ? null : dt;
+    }
+
+    // Normalise date to YYYY-MM-DD string for comparison
+    function normDate(d) {
+      const dt = parseAnyDate(d);
+      if (!dt) return String(d).trim();
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth() + 1).padStart(2, '0');
+      const day = String(dt.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function formatDisplayDate(d) {
+      if (!d) return String(d);
+      const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      const days   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      const dt = parseAnyDate(d);
+      if (!dt || isNaN(dt.getTime())) return String(d); // return raw string if can't parse
+      return `${days[dt.getDay()]}, ${dt.getDate()} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+    }
+
+    async function callGet(params) {
+      const url = new URL(SCRIPT_URL);
+      Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
+      const res = await fetch(url.toString());
+      const text = await res.text();
+      try { return JSON.parse(text); } catch(e) { console.error('Parse error:', text); throw e; }
+    }
+    async function callPost(payload) {
+      const res = await fetch(SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      const text = await res.text();
+      try { return JSON.parse(text); } catch(e) { console.error('Parse error:', text); throw e; }
+    }
+
+    function showToast(msg, type='info', duration=4000) {
+      const icons = {success:'✅',error:'❌',info:'ℹ️'};
+      const tc = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `${icons[type]} ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity 0.3s'; setTimeout(()=>t.remove(),300); }, duration);
+    }
+
+    // ── DEMO DATA ──
+    function getDemoData(date) {
+      return [
+        { id:'d1', nama:'Sony Arman',   jabatan:'SM Recruitment and Development', point:'Proses rekrutmen untuk posisi staff baru sudah berjalan dengan lancar. Total 12 kandidat sudah masuk tahap wawancara akhir.', link:'https://example.com', imageUrl:'' },
+        { id:'d2', nama:'Sony Arman',   jabatan:'SM Recruitment and Development', point:'Program onboarding batch Q2 dijadwalkan mulai tanggal 15 bulan ini dengan total 8 peserta.', link:'', imageUrl:'' },
+        { id:'d3', nama:'Syahendri',    jabatan:'Manager Recruitment', point:'Job posting sudah di-publish di 5 platform rekrutmen. Response rate cukup baik, mencapai 78% dari target.', link:'', imageUrl:'' },
+        { id:'d4', nama:'Joko Prabowo', jabatan:'Manager Development', point:'Program training leadership berjalan sesuai rencana. Semua peserta sudah menyelesaikan modul 1 dan 2.', link:'https://example.com', imageUrl:'' },
+        { id:'d5', nama:'Ridwan',       jabatan:'Manager Compliance', point:'Audit kepatuhan regulasi ketenagakerjaan sudah selesai dilakukan. Tidak ada temuan mayor.', link:'', imageUrl:'' },
+        { id:'d6', nama:'Asep Tofandi', jabatan:'SM Personalia', point:'Proses penggajian bulan ini berjalan lancar. Semua data karyawan sudah terverifikasi dan tidak ada komplain.', link:'', imageUrl:'' },
+        { id:'d7', nama:'Asep Tofandi', jabatan:'SM Personalia', point:'Koordinasi dengan divisi keuangan terkait penyesuaian BPJS sudah selesai dilakukan.', link:'', imageUrl:'' },
+        { id:'d8', nama:'Andreas',      jabatan:'Manager Benefit', point:'Evaluasi paket benefit karyawan sedang dalam proses review. Perbandingan benchmark industri sudah disiapkan.', link:'', imageUrl:'' },
+        { id:'d9', nama:'Bayu',         jabatan:'Manager Personalia', point:'Database karyawan sudah di-update setelah ada 3 karyawan baru bergabung dan 1 mengundurkan diri.', link:'', imageUrl:'' },
+      ];
+    }
+
+    // ── INIT ──
+    loadDates();
+  </script>
+</body>
+</html>
