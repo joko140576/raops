@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCC Division – Presentasi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --white: #ffffff;
+      --border: #dde3ed;
+      --rdc: #1d4ed8;
+      --rdc-light: #eff6ff;
+      --rdc-mid: #dbeafe;
+      --rdc-dark: #1e3a8a;
+      --pers: #047857;
+      --pers-light: #ecfdf5;
+      --pers-mid: #d1fae5;
+      --pers-dark: #064e3b;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #475569;
+      --accent: #2563eb;
+      --accent3: #7c3aed;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: radial-gradient(circle, #c8d6e8 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none; opacity: 0.4;
+    }
+    .bg-orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+    .orb1 { width: 700px; height: 700px; background: rgba(37,99,235,0.08); top: -200px; right: -200px; animation: drift 12s ease-in-out infinite alternate; }
+    .orb2 { width: 500px; height: 500px; background: rgba(5,150,105,0.06); bottom: -150px; left: -100px; animation: drift 15s ease-in-out infinite alternate-reverse; }
+    @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 20px); } }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      border-radius: 8px; display: grid; place-items: center;
+      font-size: 14px; font-weight: 800; color: white;
+    }
+    .topbar-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .topbar-title span { color: var(--accent); }
+    .topbar-date {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      padding: 4px 12px; border-radius: 20px; color: var(--accent);
+    }
+    .topbar-right { display: flex; gap: 8px; align-items: center; }
+    .back-btn {
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); background: transparent;
+      color: var(--text-dim); font-family: inherit; transition: all 0.2s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .back-btn:hover { background: #f1f5f9; color: var(--text); border-color: #94a3b8; }
+    .fullscreen-btn {
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: white; font-family: inherit; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .fullscreen-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── MAIN ── */
+    main {
+      position: relative; z-index: 5;
+      max-width: 1400px; margin: 0 auto;
+      padding: 84px 32px 60px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center; margin-bottom: 48px;
+    }
+    .event-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 20px; border-radius: 24px;
+      background: white; border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace; margin-bottom: 16px;
+    }
+    .event-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+    .page-header h1 {
+      font-size: clamp(28px, 4vw, 48px); font-weight: 900;
+      letter-spacing: -0.03em; line-height: 1.1; color: var(--text);
+      margin-bottom: 10px;
+    }
+    .page-header h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-header .subtitle {
+      font-size: 15px; color: var(--text-muted); line-height: 1.6;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .section-divider span {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    }
+
+    /* ── 2-COLUMN LAYOUT ── */
+    .presentation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── DEPARTMENT CARD ── */
+    .dept-card {
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .dept-head {
+      padding: 24px 28px 20px;
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .rdc .dept-head { background: linear-gradient(135deg, #1d4ed8, #1e40af); }
+    .pers .dept-head { background: linear-gradient(135deg, #059669, #047857); }
+
+    .dept-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: grid; place-items: center; font-size: 24px; flex-shrink: 0;
+    }
+    .rdc .dept-icon { background: rgba(255,255,255,0.15); }
+    .pers .dept-icon { background: rgba(255,255,255,0.15); }
+
+    .dept-head-text { flex: 1; }
+    .dept-head-text h2 {
+      font-size: clamp(15px, 2vw, 20px); font-weight: 800;
+      color: white; letter-spacing: -0.01em; line-height: 1.2;
+    }
+    .dept-head-text p {
+      font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 5px; line-height: 1.5;
+    }
+    .dept-count {
+      background: rgba(255,255,255,0.2); border-radius: 10px;
+      padding: 6px 12px; text-align: center; flex-shrink: 0; align-self: flex-start;
+    }
+    .dept-count .num { font-size: 22px; font-weight: 800; color: white; display: block; line-height: 1; }
+    .dept-count .lbl { font-size: 9px; color: rgba(255,255,255,0.7); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .dept-body {
+      padding: 20px 24px;
+      display: flex; flex-direction: column; gap: 10px;
+      background: white;
+      max-height: calc(100vh - 280px);
+      overflow-y: auto;
+    }
+    .dept-body::-webkit-scrollbar { width: 4px; }
+    .dept-body::-webkit-scrollbar-track { background: transparent; }
+    .rdc .dept-body::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 4px; }
+    .pers .dept-body::-webkit-scrollbar-thumb { background: #a7f3d0; border-radius: 4px; }
+
+    /* ── POINT ITEM ── */
+    .point-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      transition: all 0.25s;
+      animation: fadeUp 0.4s ease both;
+    }
+    .point-row:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .rdc .point-row:hover { border-color: #bfdbfe; background: #f0f7ff; }
+    .pers .point-row:hover { border-color: #a7f3d0; background: #f0fdf7; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .point-index {
+      width: 26px; height: 26px; border-radius: 8px;
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 800; flex-shrink: 0; color: white;
+    }
+    .rdc .point-index { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .pers .point-index { background: linear-gradient(135deg, #059669, #047857); }
+
+    .point-body { flex: 1; }
+    .point-text {
+      font-size: 14px; line-height: 1.7; color: var(--text); font-weight: 500;
+    }
+    .point-extras { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .badge-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      background: #f0f9ff; border: 1px solid #bae6fd; color: #0891b2;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .badge-link:hover { background: #e0f2fe; }
+    .badge-img {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      background: #fffbeb; border: 1px solid #fde68a; color: #d97706;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .badge-img:hover { background: #fef3c7; }
+
+    /* ── EMPTY ── */
+    .empty-dept {
+      padding: 40px 20px; text-align: center; color: var(--text-muted);
+    }
+    .empty-dept .icon { font-size: 36px; margin-bottom: 10px; }
+    .empty-dept p { font-size: 13px; }
+
+    /* ── NO DATA PAGE ── */
+    .no-data {
+      text-align: center; padding: 120px 24px;
+      position: relative; z-index: 5;
+    }
+    .no-data .icon { font-size: 64px; margin-bottom: 20px; }
+    .no-data h2 { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .no-data p { font-size: 15px; color: var(--text-muted); margin-bottom: 28px; }
+    .no-data a {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      color: white; font-weight: 700; text-decoration: none; font-size: 14px;
+      transition: all 0.2s; box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    }
+    .no-data a:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.4); }
+
+    /* ── IMAGE MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(15,23,42,0.75); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-overlay img { max-width: 100%; max-height: 82vh; border-radius: 14px; object-fit: contain; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
+    .modal-close {
+      position: absolute; top: 20px; right: 20px; width: 42px; height: 42px;
+      border-radius: 50%; background: rgba(255,255,255,0.15); border: none;
+      color: white; font-size: 20px; cursor: pointer; display: grid; place-items: center;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.28); }
+
+    /* ── FULLSCREEN tweaks ── */
+    :fullscreen main, :-webkit-full-screen main { padding-top: 70px; }
+    :fullscreen .topbar, :-webkit-full-screen .topbar { position: fixed; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .presentation-grid { grid-template-columns: 1fr; }
+      .dept-body { max-height: none; }
+      .topbar { padding: 0 16px; }
+      main { padding: 76px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-orb orb1"></div>
+  <div class="bg-orb orb2"></div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo-icon">H</div>
+      <div class="topbar-title"><span>HCC</span> Division</div>
+      <div class="topbar-date" id="topbarDate">—</div>
+    </div>
+    <div class="topbar-right">
+      <a href="viewer.html" class="back-btn">← Kembali</a>
+      <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <main id="mainContent">
+    <div class="no-data">
+      <div class="icon">📋</div>
+      <h2>Tidak Ada Data</h2>
+      <p>Buka halaman viewer, pilih tanggal, lalu tekan tombol <strong>Presentasikan</strong>.</p>
+      <a href="viewer.html">← Kembali ke Viewer</a>
+    </div>
+  </main>
+
+  <!-- IMAGE MODAL -->
+  <div class="modal-overlay" id="imgModal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modalImg" src="" alt="Lampiran" />
+  </div>
+
+  <script>
+    const rdcNames  = ['Sony Arman', 'Joko Prabowo', 'Syahendri', 'Ridwan'];
+    const persNames = ['Asep Tofandi', 'Andreas', 'Bayu'];
+
+    function escHtml(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function openModal(url) {
+      document.getElementById('modalImg').src = url;
+      document.getElementById('imgModal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('imgModal').classList.remove('open'); }
+
+    function toggleFullscreen() {
+      const el = document.documentElement;
+      if (!document.fullscreenElement) {
+        el.requestFullscreen && el.requestFullscreen();
+      } else {
+        document.exitFullscreen && document.exitFullscreen();
+      }
+    }
+
+    // ── RENDER ──
+    function render(date, data) {
+      const main = document.getElementById('mainContent');
+
+      // Update topbar date
+      document.getElementById('topbarDate').textContent = '📅 ' + formatDate(date);
+
+      if (!data || data.length === 0) {
+        main.innerHTML = `
+          <div class="no-data">
+            <div class="icon">🔍</div>
+            <h2>Belum Ada Data</h2>
+            <p>Tidak ada poin yang tersimpan untuk tanggal ini.</p>
+            <a href="viewer.html">← Kembali ke Viewer</a>
+          </div>`;
+        return;
+      }
+
+      // Group by name
+      const byName = {};
+      data.forEach(row => {
+        if (!byName[row.nama]) byName[row.nama] = [];
+        byName[row.nama].push(row);
+      });
+
+      // Flatten points per group
+      const rdcPoints  = rdcNames.flatMap(n => byName[n] || []);
+      const persPoints = persNames.flatMap(n => byName[n] || []);
+
+      main.innerHTML = `
+        <div class="page-header">
+          <div class="event-badge"><div class="dot"></div>SESI PRESENTASI AKTIF</div>
+          <h1>Rekap <span class="highlight">Divisi HCC</span></h1>
+          <p class="subtitle">Human Capital &amp; Compliance Division · ${formatDate(date)}</p>
+        </div>
+
+        <div class="presentation-grid">
+          ${renderDept('rdc', '🏢', 'Recruitment, Development & Compliance', rdcPoints)}
+          ${renderDept('pers', '👥', 'Personalia Department', persPoints)}
+        </div>
+      `;
+    }
+
+    function renderDept(cls, icon, title, points) {
+      const rows = points.length === 0
+        ? `<div class="empty-dept"><div class="icon">📭</div><p>Belum ada poin untuk sesi ini</p></div>`
+        : points.map((p, i) => `
+            <div class="point-row" style="animation-delay:${i * 0.05}s">
+              <div class="point-index">${i + 1}</div>
+              <div class="point-body">
+                <div class="point-text">${escHtml(p.point)}</div>
+                ${p.link || p.imageUrl ? `<div class="point-extras">
+                  ${p.link ? `<a class="badge-link" href="${escHtml(p.link)}" target="_blank">🔗 Referensi</a>` : ''}
+                  ${p.imageUrl ? `<span class="badge-img" onclick="openModal('${escHtml(p.imageUrl)}')">🖼 Gambar</span>` : ''}
+                </div>` : ''}
+              </div>
+            </div>`).join('');
+
+      return `
+        <div class="dept-card ${cls}">
+          <div class="dept-head">
+            <div class="dept-icon">${icon}</div>
+            <div class="dept-head-text">
+              <h2>${title}</h2>
+              <p>${points.length} poin terdaftar pada sesi ini</p>
+            </div>
+            <div class="dept-count">
+              <span class="num">${points.length}</span>
+              <span class="lbl">POIN</span>
+            </div>
+          </div>
+          <div class="dept-body">${rows}</div>
+        </div>`;
+    }
+
+    function formatDate(d) {
+      if (!d) return '—';
+      const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      const days   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      // handle YYYY-MM-DD
+      let dt;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(String(d).trim())) {
+        dt = new Date(d + 'T00:00:00');
+      } else {
+        dt = new Date(d);
+      }
+      if (isNaN(dt.getTime())) return String(d);
+      return `${days[dt.getDay()]}, ${dt.getDate()} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+    }
+
+    // ── LOAD DATA from localStorage (set by viewer.html) ──
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem('hcc_presentation');
+        if (!raw) return; // keep no-data state
+        const { date, data } = JSON.parse(raw);
+        render(date, data);
+      } catch(e) {
+        console.error('Failed to load presentation data:', e);
+      }
+    });
+  </script>
+</body>
+</html>
