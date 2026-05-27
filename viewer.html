@@ -532,71 +532,126 @@
     function renderPersonBlock(name, points, group) {
       const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
       const jabatan  = jabatanMap[name] || '';
-      const pointsHtml = points.map((p, i) => `
-        <div class="point-entry" data-id="${p.id || ''}">
+
+      // Build each point using a safe unique key (strip hyphens from UUID, fallback to name+index)
+      const pointsHtml = points.map((p, i) => {
+        // Safe key: no hyphens, no special chars — safe for use in element IDs and onclick attrs
+        const safeKey = (p.id && p.id !== '')
+          ? 'id' + p.id.replace(/[^a-zA-Z0-9]/g, '')
+          : 'k' + name.replace(/[^a-zA-Z0-9]/g, '') + i;
+        const rawId   = p.id || '';
+        const rawText = p.point || '';
+        const hasLink = p.link && p.link.trim() !== '';
+        const hasImg  = p.imageUrl && p.imageUrl.trim() !== '';
+
+        // Store link/imageUrl in data attributes to avoid escaping nightmares in onclick
+        return `
+        <div class="point-entry"
+             data-id="${escHtml(rawId)}"
+             data-link="${escHtml(p.link || '')}"
+             data-img="${escHtml(p.imageUrl || '')}">
           <div class="point-text-wrap">
             <div class="point-bullet"></div>
             <div class="point-content">
-              <p class="point-text" id="pt_${p.id || 'x' + i}">${escHtml(p.point || '')}</p>
-              <textarea class="point-edit-area" id="ptedit_${p.id || 'x' + i}">${escHtml(p.point || '')}</textarea>
+              <p class="point-text" id="pt_${safeKey}">${escHtml(rawText)}</p>
+              <textarea class="point-edit-area" id="ptedit_${safeKey}">${escHtml(rawText)}</textarea>
             </div>
           </div>
           <div class="point-actions">
-            <button class="action-btn edit-btn" onclick="startEdit('${p.id || ''}','${p.id || 'x' + i}')">✏️ Edit</button>
-            <button class="action-btn save-edit-btn" id="sbtn_${p.id || 'x' + i}" onclick="saveEdit('${p.id || ''}','${p.id || 'x' + i}')">✅ Simpan</button>
-            <button class="action-btn cancel-edit-btn" id="cbtn_${p.id || 'x' + i}" onclick="cancelEdit('${p.id || 'x' + i}','${escHtml(p.point || '')}')">✕</button>
+            <button class="action-btn edit-btn"
+              onclick="startEdit('${safeKey}')">✏️ Edit</button>
+            <button class="action-btn save-edit-btn" id="sbtn_${safeKey}"
+              onclick="saveEdit('${safeKey}')">✅ Simpan</button>
+            <button class="action-btn cancel-edit-btn" id="cbtn_${safeKey}"
+              onclick="cancelEdit('${safeKey}')">✕ Batal</button>
           </div>
-          ${p.link || p.imageUrl ? `<div class="point-extras">
-            ${p.link ? `<a class="point-link-badge" href="${p.link}" target="_blank">🔗 Lihat Link</a>` : ''}
-            ${p.imageUrl ? `<span class="point-img-badge" onclick="openModal('${p.imageUrl}')">🖼 Lihat Gambar</span>` : ''}
+          ${hasLink || hasImg ? `<div class="point-extras">
+            ${hasLink ? `<a class="point-link-badge" href="${escHtml(p.link)}" target="_blank">🔗 Lihat Link</a>` : ''}
+            ${hasImg  ? `<button class="point-img-badge" onclick="openImgFromEntry(this)">🖼 Lihat Gambar</button>` : ''}
           </div>` : ''}
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
 
       return `
         <div class="person-block">
           <div class="person-header">
-            <div class="person-avatar" style="background:linear-gradient(135deg, ${avatarColors[name]||'#4f46e5'}, ${avatarColors[name]||'#4f46e5'}aa)">${initials}</div>
+            <div class="person-avatar" style="background:linear-gradient(135deg,${avatarColors[name]||'#4f46e5'},${avatarColors[name]||'#4f46e5'}bb)">${initials}</div>
             <div class="person-info">
               <div class="name">${name}</div>
               <div class="role">${jabatan}</div>
             </div>
           </div>
           <div class="person-points">${pointsHtml}</div>
-        </div>
-      `;
+        </div>`;
+    }
+
+    // Read image URL from closest .point-entry's data-img attribute
+    function openImgFromEntry(btn) {
+      const entry = btn.closest('.point-entry');
+      const url = entry ? entry.getAttribute('data-img') : '';
+      if (url) openModal(url);
     }
 
     // ── EDIT ──
-    function startEdit(id, key) {
-      document.getElementById('pt_' + key).classList.add('editing');
-      document.getElementById('ptedit_' + key).classList.add('active');
-      document.getElementById('sbtn_' + key).style.display = 'inline-flex';
-      document.getElementById('cbtn_' + key).style.display = 'inline-flex';
+    function startEdit(safeKey) {
+      const ptEl     = document.getElementById('pt_'     + safeKey);
+      const editEl   = document.getElementById('ptedit_' + safeKey);
+      const sbtnEl   = document.getElementById('sbtn_'   + safeKey);
+      const cbtnEl   = document.getElementById('cbtn_'   + safeKey);
+      if (!ptEl || !editEl) return;
+      // Pre-fill textarea with current displayed text
+      editEl.value = ptEl.textContent;
+      ptEl.classList.add('editing');
+      editEl.classList.add('active');
+      editEl.focus();
+      sbtnEl.style.display = 'inline-flex';
+      cbtnEl.style.display = 'inline-flex';
     }
-    function cancelEdit(key, original) {
-      document.getElementById('pt_' + key).classList.remove('editing');
-      document.getElementById('ptedit_' + key).classList.remove('active');
-      document.getElementById('ptedit_' + key).value = original;
-      document.getElementById('sbtn_' + key).style.display = 'none';
-      document.getElementById('cbtn_' + key).style.display = 'none';
+
+    function cancelEdit(safeKey) {
+      const ptEl   = document.getElementById('pt_'     + safeKey);
+      const editEl = document.getElementById('ptedit_' + safeKey);
+      const sbtnEl = document.getElementById('sbtn_'   + safeKey);
+      const cbtnEl = document.getElementById('cbtn_'   + safeKey);
+      if (!ptEl) return;
+      ptEl.classList.remove('editing');
+      editEl.classList.remove('active');
+      sbtnEl.style.display = 'none';
+      cbtnEl.style.display = 'none';
     }
-    async function saveEdit(id, key) {
-      const newText = document.getElementById('ptedit_' + key).value.trim();
+
+    async function saveEdit(safeKey) {
+      const ptEl   = document.getElementById('pt_'     + safeKey);
+      const editEl = document.getElementById('ptedit_' + safeKey);
+      const sbtnEl = document.getElementById('sbtn_'   + safeKey);
+      const cbtnEl = document.getElementById('cbtn_'   + safeKey);
+      const newText = editEl.value.trim();
       if (!newText) { showToast('Teks tidak boleh kosong!', 'error'); return; }
 
+      // Get real row ID from closest .point-entry data-id attribute
+      const entry = ptEl.closest('.point-entry');
+      const rowId = entry ? entry.getAttribute('data-id') : '';
+
+      // Optimistic UI update first
+      ptEl.textContent = newText;
+      ptEl.classList.remove('editing');
+      editEl.classList.remove('active');
+      sbtnEl.style.display = 'none';
+      cbtnEl.style.display = 'none';
+
+      // Also update in allData so Presentasikan reflects edits
+      if (rowId && allData) {
+        const row = allData.find(r => r.id === rowId);
+        if (row) row.point = newText;
+      }
+
       try {
-        if (id && !id.startsWith('x')) {
-          await callPost({ action: 'updatePoint', rowId: id, newText });
+        if (rowId && rowId !== '') {
+          await callPost({ action: 'updatePoint', rowId, newText });
         }
-        document.getElementById('pt_' + key).textContent = newText;
-        document.getElementById('pt_' + key).classList.remove('editing');
-        document.getElementById('ptedit_' + key).classList.remove('active');
-        document.getElementById('sbtn_' + key).style.display = 'none';
-        document.getElementById('cbtn_' + key).style.display = 'none';
         showToast('Poin berhasil diupdate!', 'success');
       } catch(e) {
-        showToast('Gagal menyimpan. Coba lagi.', 'error');
+        showToast('Tersimpan lokal. Gagal sync ke server.', 'info');
       }
     }
 
