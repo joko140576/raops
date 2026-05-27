@@ -298,6 +298,8 @@
       .topbar { padding: 0 16px; }
       main { padding: 76px 16px 40px; }
     }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -335,6 +337,12 @@
   </div>
 
   <script>
+    // ============================================================
+    // KONFIGURASI — sama dengan viewer.html dan index.html
+    // ============================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQLkyZnBPpEzK6h-i0KHk794BU_b8UBiyo_rkh4O2epbn1f5IK05vecaqNszNt0zYf/exec';
+
+    // ============================================================
     const rdcNames  = ['Sony Arman', 'Joko Prabowo', 'Syahendri', 'Ridwan'];
     const persNames = ['Asep Tofandi', 'Andreas', 'Bayu'];
 
@@ -343,10 +351,32 @@
     }
 
     function openModal(url) {
-      document.getElementById('modalImg').src = url;
+      // Jika URL adalah Google Drive uc?export=view, convert ke thumbnail untuk embed
+      const embedUrl = convertDriveUrl(url);
+      const img = document.getElementById('modalImg');
+      img.src = embedUrl;
+      // Fallback ke URL asli jika thumbnail gagal
+      img.onerror = function() { this.src = url; this.onerror = null; };
       document.getElementById('imgModal').classList.add('open');
     }
-    function closeModal() { document.getElementById('imgModal').classList.remove('open'); }
+    function closeModal() {
+      document.getElementById('imgModal').classList.remove('open');
+      document.getElementById('modalImg').src = '';
+    }
+
+    // Convert berbagai format URL Google Drive ke format thumbnail yang bisa di-embed
+    function convertDriveUrl(url) {
+      if (!url) return '';
+      // Sudah thumbnail format
+      if (url.includes('thumbnail')) return url;
+      // Format uc?export=view&id=FILE_ID
+      const m1 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (m1) return 'https://drive.google.com/thumbnail?id=' + m1[1] + '&sz=w1200';
+      // Format /file/d/FILE_ID/
+      const m2 = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)\//);
+      if (m2) return 'https://drive.google.com/thumbnail?id=' + m2[1] + '&sz=w1200';
+      return url;
+    }
 
     function toggleFullscreen() {
       const el = document.documentElement;
@@ -458,15 +488,70 @@
       return `${days[dt.getDay()]}, ${dt.getDate()} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
     }
 
-    // ── LOAD DATA from localStorage (set by viewer.html) ──
-    window.addEventListener('DOMContentLoaded', () => {
+    // ── FETCH dari Apps Script ──
+    function normDate(d) {
+      if (!d) return '';
+      const s = String(d).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+      // DD/MM/YYYY
+      const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (m) return m[3] + '-' + m[2].padStart(2,'0') + '-' + m[1].padStart(2,'0');
+      const dt = new Date(s);
+      if (!isNaN(dt.getTime())) {
+        return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+      }
+      return s;
+    }
+
+    async function fetchFromScript(date) {
+      const queryDate = normDate(date);
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.set('action', 'getData');
+      const res = await fetch(url.toString(), { redirect: 'follow' });
+      const text = await res.text();
+      const result = JSON.parse(text);
+      const all = result.data || [];
+      return all.filter(row => normDate(row.tanggal) === queryDate);
+    }
+
+    // ── LOAD DATA ──
+    window.addEventListener('DOMContentLoaded', async () => {
       try {
+        // Prioritas 1: dari localStorage (dikirim viewer.html via tombol Presentasikan)
         const raw = localStorage.getItem('hcc_presentation');
-        if (!raw) return; // keep no-data state
-        const { date, data } = JSON.parse(raw);
-        render(date, data);
+        if (raw) {
+          const { date, data } = JSON.parse(raw);
+          // Validasi data punya field yang benar
+          if (data && data.length > 0 && data[0].point !== undefined) {
+            render(date, data);
+            return;
+          }
+        }
+
+        // Prioritas 2: fetch langsung dari Apps Script jika ada date di URL param
+        const params = new URLSearchParams(window.location.search);
+        const dateParam = params.get('date');
+        if (dateParam && SCRIPT_URL.indexOf('YOUR_SCRIPT_ID') === -1) {
+          document.getElementById('mainContent').innerHTML = `
+            <div style="text-align:center;padding:80px 20px">
+              <div style="width:40px;height:40px;border-radius:50%;border:3px solid #dbeafe;border-top-color:#2563eb;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+              <p style="color:#64748b;font-size:14px">Memuat data…</p>
+            </div>`;
+          const data = await fetchFromScript(dateParam);
+          render(dateParam, data);
+          return;
+        }
+
+        // Tidak ada data sama sekali → tampilkan petunjuk
       } catch(e) {
         console.error('Failed to load presentation data:', e);
+        document.getElementById('mainContent').innerHTML = `
+          <div class="no-data">
+            <div class="icon">⚠️</div>
+            <h2>Gagal Memuat Data</h2>
+            <p>Kembali ke viewer dan tekan tombol <strong>Presentasikan</strong> lagi.</p>
+            <a href="viewer.html">← Kembali ke Viewer</a>
+          </div>`;
       }
     });
   </script>
