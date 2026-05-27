@@ -10,18 +10,19 @@
       --bg: #f0f4f8;
       --surface: #ffffff;
       --surface2: #f8fafc;
-      --border: #e2e8f0;
+      --border: #dde3ed;
+      --border-strong: #c4cdd9;
       --border-glow: #2563eb;
-      --accent: #3b82f6;
-      --accent2: #06b6d4;
-      --accent3: #8b5cf6;
+      --accent: #2563eb;
+      --accent2: #0891b2;
+      --accent3: #7c3aed;
       --gold: #d97706;
-      --text: #1e293b;
+      --text: #0f172a;
       --text-muted: #64748b;
       --text-dim: #475569;
-      --success: #10b981;
-      --error: #ef4444;
-      --card-bg: rgba(255, 255, 255, 0.95);
+      --success: #059669;
+      --error: #dc2626;
+      --card-bg: #ffffff;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,18 +40,16 @@
     /* ── BACKGROUND ── */
     .bg-grid {
       position: fixed; inset: 0; z-index: 0;
-      background-image:
-        linear-gradient(rgba(37,99,235,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37,99,235,0.08) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
+      background-image: radial-gradient(circle, #c8d6e8 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none; opacity: 0.55;
     }
     .bg-orb {
-      position: fixed; border-radius: 50%; filter: blur(120px);
+      position: fixed; border-radius: 50%; filter: blur(100px);
       pointer-events: none; z-index: 0;
     }
-    .orb1 { width: 600px; height: 600px; background: rgba(37,99,235,0.08); top: -200px; right: -200px; }
-    .orb2 { width: 500px; height: 500px; background: rgba(139,92,246,0.06); bottom: -150px; left: -100px; }
+    .orb1 { width: 600px; height: 600px; background: rgba(37,99,235,0.07); top: -200px; right: -200px; }
+    .orb2 { width: 500px; height: 500px; background: rgba(124,58,237,0.05); bottom: -150px; left: -100px; }
 
     /* ── HEADER ── */
     header {
@@ -59,8 +58,9 @@
       height: 72px;
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(20px);
+      box-shadow: 0 1px 12px rgba(0,0,0,0.06);
     }
     .logo {
       display: flex; align-items: center; gap: 12px;
@@ -86,9 +86,9 @@
     }
     .nav-btn.ghost {
       background: transparent; color: var(--text-dim);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
     }
-    .nav-btn.ghost:hover { background: var(--surface2); color: var(--text); }
+    .nav-btn.ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
     .nav-btn.primary {
       background: linear-gradient(135deg, var(--accent), var(--accent3));
       color: white;
@@ -106,15 +106,14 @@
       text-align: center; margin-bottom: 48px;
     }
     .page-title .eyebrow {
-      font-size: 16px; font-weight: 600; letter-spacing: 0.2em;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
       color: var(--accent); text-transform: uppercase;
       font-family: 'JetBrains Mono', monospace;
       margin-bottom: 12px;
     }
     .page-title h1 {
       font-size: clamp(28px, 5vw, 42px); font-weight: 800;
-      line-height: 1.15; letter-spacing: -0.02em;
-      color: var(--text);
+      line-height: 1.15; letter-spacing: -0.02em; color: var(--text);
     }
     .page-title h1 span {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -130,22 +129,21 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       overflow: hidden;
-      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
     }
     .form-card-header {
       padding: 24px 32px;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(139,92,246,0.03));
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
       display: flex; align-items: center; gap: 12px;
     }
     .section-badge {
       width: 8px; height: 8px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 12px var(--accent);
+      box-shadow: 0 0 8px rgba(37,99,235,0.4);
     }
     .form-card-header h2 {
-      font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
-      color: var(--text);
+      font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--text);
     }
     .form-card-header p { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
 
@@ -159,8 +157,8 @@
       display: flex; flex-direction: column; gap: 8px;
     }
     .field label {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--text-muted);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim);
       font-family: 'JetBrains Mono', monospace;
     }
     .field label .req { color: var(--accent); margin-left: 4px; }
@@ -183,25 +181,25 @@
       transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
       appearance: none; -webkit-appearance: none;
     }
-    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); cursor: pointer; }
+    input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
     input[type="date"]:focus, input[type="text"]:focus, input[type="url"]:focus,
     select:focus, textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
-      background: rgba(59,130,246,0.04);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+      background: #eff6ff;
     }
-    select { cursor: pointer; background: var(--surface2); }
-    select option { background: var(--surface2); color: var(--text); }
+    select { cursor: pointer; }
+    select option { background: white; color: #0f172a; }
 
     textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
 
     .jabatan-display {
       padding: 12px 14px;
-      background: rgba(6,182,212,0.08);
-      border: 1px solid rgba(6,182,212,0.3);
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
       border-radius: 10px;
       font-size: 13px; font-weight: 600;
-      color: #0d9488;
+      color: var(--accent2);
       display: flex; align-items: center; gap: 8px;
       min-height: 46px;
       transition: all 0.3s;
@@ -210,7 +208,7 @@
 
     /* ── UPLOAD ── */
     .upload-zone {
-      border: 1.5px dashed var(--border);
+      border: 1.5px dashed var(--border-strong);
       border-radius: 10px;
       padding: 16px;
       cursor: pointer;
@@ -218,8 +216,8 @@
       display: flex; align-items: center; gap: 12px;
       background: var(--surface2);
     }
-    .upload-zone:hover { border-color: var(--accent); background: rgba(59,130,246,0.06); }
-    .upload-zone.has-file { border-color: var(--success); background: rgba(16,185,129,0.08); }
+    .upload-zone:hover { border-color: var(--accent); background: #eff6ff; }
+    .upload-zone.has-file { border-color: var(--success); background: #ecfdf5; }
     .upload-zone input[type="file"] { display: none; }
     .upload-icon { font-size: 22px; flex-shrink: 0; }
     .upload-text { flex: 1; }
@@ -257,22 +255,23 @@
       padding: 16px 20px;
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(139,92,246,0.06);
+      background: #f5f3ff;
     }
-    .points-header h3 { font-size: 13px; font-weight: 700; color: #7c3aed; }
+    .points-header h3 { font-size: 13px; font-weight: 700; color: var(--accent3); }
     .points-count {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px; color: var(--text-muted);
-      background: rgba(0,0,0,0.04);
+      background: #ede9fe;
       padding: 3px 10px; border-radius: 20px;
     }
 
     .points-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
     .point-item {
-      background: var(--surface);
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
       animation: slideIn 0.3s ease;
     }
     @keyframes slideIn {
@@ -298,7 +297,7 @@
       transition: color 0.2s;
     }
     .point-remove:hover { color: var(--error); }
-    .point-item-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .point-item-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; background: white; }
     .point-item-body textarea {
       font-size: 13px; min-height: 80px;
     }
@@ -311,17 +310,17 @@
       margin: 0 20px 20px;
       width: calc(100% - 40px);
       padding: 12px;
-      border: 1.5px dashed rgba(139,92,246,0.4);
+      border: 1.5px dashed #c4b5fd;
       border-radius: 10px;
-      background: rgba(139,92,246,0.08);
-      color: #7c3aed;
+      background: #f5f3ff;
+      color: var(--accent3);
       font-family: 'Sora', sans-serif;
       font-size: 13px; font-weight: 600;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: all 0.2s;
     }
-    .add-point-btn:hover { border-color: var(--accent3); background: rgba(139,92,246,0.15); }
+    .add-point-btn:hover { border-color: var(--accent3); background: #ede9fe; }
     .add-point-btn span { font-size: 18px; font-weight: 400; }
 
     /* ── SAVE BUTTON ── */
@@ -344,29 +343,29 @@
       cursor: pointer; flex-shrink: 0;
       display: flex; align-items: center; gap: 10px;
       transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+      box-shadow: 0 4px 16px rgba(37,99,235,0.3);
     }
-    .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); }
+    .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.4); }
     .save-btn:active { transform: translateY(0); }
     .save-btn.loading { opacity: 0.7; pointer-events: none; }
 
     /* ── TOAST ── */
     .toast-container { position: fixed; bottom: 32px; right: 32px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
     .toast {
-      padding: 14px 20px;
+      padding: 13px 18px;
       border-radius: 12px; font-size: 13px; font-weight: 600;
       display: flex; align-items: center; gap: 10px;
       animation: toastIn 0.3s ease;
       max-width: 320px;
-      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
     }
     @keyframes toastIn {
       from { opacity: 0; transform: translateX(20px); }
       to { opacity: 1; transform: translateX(0); }
     }
-    .toast.success { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #0a7c5e; }
-    .toast.error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #b91c1c; }
-    .toast.info { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: #1d4ed8; }
+    .toast.success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .toast.error   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .toast.info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
 
     /* ── PROGRESS ── */
     .progress-bar {
@@ -389,16 +388,15 @@
     }
 
     .config-bar {
-      background: rgba(217,119,6,0.1); border: 1px solid rgba(217,119,6,0.3);
+      background: #fffbeb; border: 1px solid #fde68a;
       border-radius: 10px; padding: 12px 16px; margin-bottom: 24px;
-      font-size: 12px; color: #b45309;
+      font-size: 12px; color: var(--gold);
       display: flex; align-items: flex-start; gap: 8px; line-height: 1.6;
     }
-    .config-bar strong { display: block; }
+    .config-bar strong { display: block; color: #92400e; }
     code {
-      background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px;
-      font-family: 'JetBrains Mono', monospace; font-size: 11px;
-      color: var(--text);
+      background: #fef3c7; padding: 2px 6px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #92400e;
     }
   </style>
 </head>
@@ -421,13 +419,13 @@
 
   <main>
     <div class="page-title">
-      <div class="eyebrow">MATERI RAOPS</div>
-      <h1>Form <span>Presentasi Divisi HCC </span></h1>
-      <p>Input Data untuk presentasi setiap personil HCC Division.</p>
+      <div class="eyebrow">// Human Capital & Compliance</div>
+      <h1>Form <span>Presentasi Divisi</span></h1>
+      <p>Input data presentasi untuk setiap personil HCC Division.</p>
     </div>
 
     <div class="config-bar">
-      ⚙️ <div><strong>kepada Senior Manager Departement & Manager Unit:</strong> Silahkan input data <code>Point-point Presentasi</code> di bawah, dan anda bisa menambahkan Gambar atau Link <code>Tekan Tombol Tambah untuk menambahkan Point</code>.</div>
+      ⚙️ <div><strong>Konfigurasi diperlukan:</strong> Buka file ini, temukan variabel <code>SCRIPT_URL</code> di bawah, dan ganti dengan URL Google Apps Script yang sudah di-deploy. Lakukan hal yang sama pada file <code>viewer.html</code>.</div>
     </div>
 
     <div class="form-card">
@@ -502,7 +500,7 @@
     // ============================================================
     // KONFIGURASI — ganti URL ini dengan URL Apps Script kamu
     // ============================================================
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZMaQp7kaBXwE1ac3g7FINdvaeNZNpihQZLCYLQ0YgCeLYYmZlMsfmiTeE8xhoqDgb/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQLkyZnBPpEzK6h-i0KHk794BU_b8UBiyo_rkh4O2epbn1f5IK05vecaqNszNt0zYf/exec';
 
     // ============================================================
     const jabatanMap = {
@@ -664,23 +662,34 @@
         const fileInput = point.querySelector('input[type="file"]');
 
         try {
-          // Save text data first
-          const saveResp = await callScript({ action: 'saveData', payload: { tanggal, nama, jabatan, point: pointText, link: linkInput } });
-
-          if (!saveResp.success) throw new Error(saveResp.message);
-          const rowId = saveResp.rowId;
-
-          // Upload image if exists
+          // Step 1: Upload gambar dulu (jika ada) → dapat imageUrl
+          let imageUrl = '';
           if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
             const base64 = await fileToBase64(file);
-            await callScript({ action: 'uploadImage', fileName: file.name, fileData: base64, mimeType: file.type, rowId });
+            showToast('Mengupload gambar…', 'info', 2000);
+            const imgResp = await callScript({
+              action: 'uploadImage',
+              fileName: file.name,
+              fileData: base64,
+              mimeType: file.type
+            });
+            if (imgResp && imgResp.imageUrl) {
+              imageUrl = imgResp.imageUrl;
+            }
           }
 
+          // Step 2: Simpan semua data termasuk imageUrl sekaligus
+          const saveResp = await callScript({
+            action: 'saveData',
+            payload: { tanggal, nama, jabatan, point: pointText, link: linkInput, imageUrl }
+          });
+
+          if (saveResp && saveResp.success === false) throw new Error(saveResp.message || 'Gagal simpan');
           savedCount++;
         } catch (e) {
           errors++;
-          console.error(e);
+          console.error('Error saving point:', e);
         }
       }
 
@@ -698,21 +707,30 @@
       }
     }
 
+    // POST ke Apps Script — pakai redirect:follow agar CORS-safe dengan deployment "Anyone"
     async function callScript(payload) {
       const res = await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain' }, // text/plain menghindari preflight CORS
         body: JSON.stringify(payload)
       });
-      return { success: true, rowId: 'local_' + Date.now() };
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch(e) {
+        console.warn('Non-JSON response:', text);
+        // Jika Apps Script redirect & body kosong, anggap sukses untuk POST write
+        return { success: true, rowId: 'local_' + Date.now() };
+      }
     }
 
     async function callScriptGet(params) {
       const url = new URL(SCRIPT_URL);
       Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
-      const res = await fetch(url.toString(), { method: 'GET' });
-      return await res.json();
+      const res = await fetch(url.toString(), { redirect: 'follow' });
+      const text = await res.text();
+      return JSON.parse(text);
     }
 
     function fileToBase64(file) {
